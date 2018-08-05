@@ -1,0 +1,23 @@
+# Eclipse artifacts
+.classpath
+.project
+.settings/
+
+**/.metadata/
+
+# IDEA artifacts and output dirs
+*.iml
+*.ipr
+*.iws
+.idea
+out
+test-output
+
+dist
+*classes
+target/
+build/
+/logs
+
+.pmd
+.scannerwork/
