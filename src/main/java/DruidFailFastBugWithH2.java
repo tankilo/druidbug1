@@ -67,7 +67,7 @@ public class DruidFailFastBugWithH2 {
         // createPhysicalConnection清掉连接池的createError
         DruidAbstractDataSource.PhysicalConnectionInfo connection2 = druidDataSource.createPhysicalConnection();
         Assert.assertFalse(connection2.getPhysicalConnection().isClosed());
-
+        // 放开另外两个运行CreateConnectionTask的线程的断点
         logger.error("=======================Begin to test!======================================");
         Assert.assertEquals(0, druidDataSource.getPoolingCount());
         while (true) {
