@@ -1,5 +1,7 @@
 import java.lang.reflect.Field;
 import java.sql.SQLException;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -28,7 +30,7 @@ public class DruidFailFastBugWithH2 {
         Server server = Server.createTcpServer(null).start();
         logger.info("Start Server at: " + server.getURL());
 
-        DruidDataSource druidDataSource = new DruidDataSource();
+        final DruidDataSource druidDataSource = new DruidDataSource();
         druidDataSource.setUrl("jdbc:h2:" + server.getURL() + "/mem:gptestdb");
         druidDataSource.setUsername("");
         druidDataSource.setPassword("");
@@ -47,6 +49,15 @@ public class DruidFailFastBugWithH2 {
         } catch (SQLException e) {
             Assert.fail();
         }
+
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                druidDataSource.getStatValueAndReset();
+            }
+        }, 0, 60000);
+
 
         // 模拟数据库宕机，然后获取两次连接让连接池的failContinuous变成true
         server.stop();
